@@ -38,6 +38,8 @@ const gameController = (() => {
   (board[0] === board[4] && board[4] === board[8] && board[0] !== '') ||
   (board[2] === board[4] && board[4] === board[6] && board[2] !== '')) return board[index]
   else if (!board.includes('')) return 'Tie'}
+
+  
   
   
 
@@ -52,37 +54,52 @@ const displayController = (() => {
   const board = gameBoard.getBoard();
   let playerDisplay = document.querySelector('h1')
   
-  
-  const updateBoard = (cell, index) => {
-    let activePlayer = gameController.getActivePlayer();
-    if (board[index] === '') {
-      board[index] = activePlayer.token
-      cell.textContent = activePlayer.token;
-      winner = gameController.checkWinner(index, board)
-      
-      activePlayer = gameController.swapActivePlayer();
-      playerDisplay.textContent = `${activePlayer.name} player's turn`
-    }
-//   let winner = gameController.checkWinner(index, board)
-//    return winner
-    
-  }  
   board.forEach((element, index) => {
+    const handleClick = () => {
+      updateBoard(cell, index)
+    }
+    
+    
+    let winner = gameController.checkWinner(index, board)
     const cell = document.createElement('button')
     cell.textContent = element;
     cell.classList.add('cell')
     container.append(cell) 
-    cell.addEventListener('click', () => {
-      updateBoard(cell, index);
-    }) 
-  })
- //if (winner) {
-  //  cells.removeEventListener('click', () => {
-  //    updateBoard(cell, index);
-  //   })
- //console.log(winner)
- //}
+    cell.addEventListener('click', handleClick) 
 
+ //   return { cell, index }
+    
+  })
+  
+  
+  
+  const updateBoard = (cell, index) => {
+    
+    let activePlayer = gameController.getActivePlayer();
+    if (board[index] === '') {
+      board[index] = activePlayer.token
+      cell.textContent = activePlayer.token;
+      let winner = gameController.checkWinner(index, board)
+     if (winner) {
+       const cells = container.querySelectorAll('.cell')
+       cells.forEach(cell => {
+        cell.removeEventListener('click', handleClick())
+       })
+       console.log(winner)
+       console.log(cells)
+        //        const cells = document.querySelectorAll('.cell')
+//        cells.forEach(cell => {cell.removeEventListener('click', handleClick)})
+//      cells.removeEventListener('click', handleClick)
+//      cells.removeEventListener('click', handleClick)
+}
+
+activePlayer = gameController.swapActivePlayer();
+playerDisplay.textContent = `${activePlayer.name} player's turn`
+}
+//   let winner = gameController.checkWinner(index, board)
+//    return winner
+
+}  
 
 })();  
 
